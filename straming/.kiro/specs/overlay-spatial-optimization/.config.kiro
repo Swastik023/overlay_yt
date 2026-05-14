@@ -1,0 +1,8 @@
+{
+  "specId": "9be2dbee-46c3-4ff8-b970-b56b63e5c62f",
+  "specType": "feature",
+  "workflowType": "requirements-first",
+  "featureName": "overlay-spatial-optimization",
+  "createdAt": "2026-05-10T22:11:00Z",
+  "phase": "tasks"
+}

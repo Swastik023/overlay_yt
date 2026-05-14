@@ -1,0 +1,337 @@
+Build a lightweight “Study With Me / Coding Stream Dashboard” web app for OBS Studio integration.
+
+IMPORTANT:
+Keep the project SIMPLE, CLEAN, LIGHTWEIGHT, and BEAUTIFUL.
+Do NOT overengineer it.
+Avoid unnecessary backend complexity.
+
+==================================================
+MAIN GOAL
+==================================================
+
+Create a premium-looking productivity overlay/dashboard for YouTube coding/study livestreams.
+
+The app will be used inside:
+OBS Studio → Browser Source
+
+Purpose:
+- Show Pomodoro timer
+- Show tasks/goals
+- Show productivity stats
+- Frame the coding area
+- Create a professional stream appearance
+
+The app should feel:
+- Minimal
+- Calm
+- Modern
+- Productive
+- Easy on the eyes
+- Premium
+- OBS-friendly
+
+==================================================
+IMPORTANT DESIGN DIRECTION
+==================================================
+
+DO NOT create:
+- overloaded cyberpunk UI
+- heavy animations
+- cluttered widgets
+- too many panels
+- flashy gamer aesthetics
+
+Instead create:
+- clean productivity dashboard
+- minimalist premium design
+- modern coding/study aesthetic
+- subtle glow effects
+- readable typography
+- balanced spacing
+
+==================================================
+TECH STACK
+==================================================
+
+Frontend:
+- React
+- Vite
+- TailwindCSS
+
+Animation:
+- Framer Motion (minimal use only)
+
+State:
+- React state or Zustand
+
+Persistence:
+- LocalStorage only
+
+NO:
+- backend
+- database
+- auth
+- microservices
+- Electron
+- AI features
+- Socket.IO
+
+==================================================
+OBS REQUIREMENTS
+==================================================
+
+The app must:
+- run smoothly inside OBS Browser Source
+- support transparent/dark background
+- use very low CPU
+- avoid unnecessary rerenders
+- support 1920x1080 layout
+- remain readable on livestreams
+
+==================================================
+MAIN LAYOUT
+==================================================
+
+--------------------------------------------------
+TOP HEADER
+--------------------------------------------------
+
+Features:
+- Stream title
+- Small subtitle
+- Minimal live indicator
+- Thin divider line
+
+Design:
+- centered title
+- subtle glow
+- clean typography
+
+Example:
+STUDY WITH ME
+Focus • Learn • Build
+
+==================================================
+
+--------------------------------------------------
+CENTER MAIN AREA
+--------------------------------------------------
+
+Purpose:
+Main coding/screen-share frame.
+
+IMPORTANT:
+This section should occupy most of the screen.
+
+Design:
+- large rounded container
+- thin glowing border
+- minimal distractions
+- dark matte background
+- optimized for VS Code visibility
+
+NOTE:
+This app does NOT capture the screen itself.
+OBS handles screen capture.
+This section visually frames the content.
+
+==================================================
+
+--------------------------------------------------
+LEFT SIDEBAR
+--------------------------------------------------
+
+SECTION 1 — POMODORO TIMER
+
+Features:
+- circular progress ring
+- 25:00 timer
+- focus/break mode
+- start/pause/reset buttons
+- session counter
+
+Behavior:
+- smooth countdown
+- subtle animations
+- auto switch between focus and break
+
+Design:
+- large readable timer
+- clean circular progress
+- minimal buttons
+- warm yellow accent
+
+==================================================
+
+SECTION 2 — TASK LIST
+
+Features:
+- checkbox tasks
+- editable tasks
+- progress percentage
+
+Example:
+✓ LeetCode
+○ DevOps
+○ AI Research
+
+Behavior:
+- save tasks to LocalStorage
+- smooth checkbox animation
+
+==================================================
+
+SECTION 3 — MUSIC PANEL
+
+Features:
+- now playing text
+- optional equalizer animation
+
+Keep it simple:
+- no heavy Spotify integration initially
+
+==================================================
+
+--------------------------------------------------
+RIGHT SIDEBAR
+--------------------------------------------------
+
+SECTION 1 — WEBCAM FRAME
+
+Purpose:
+Visual frame only.
+
+OBS handles webcam video.
+
+Design:
+- rounded border
+- subtle glow
+- modern appearance
+- minimal
+
+==================================================
+
+SECTION 2 — MOTIVATION PANEL
+
+Features:
+- rotating quotes
+- consistency reminder
+- short productivity messages
+
+Example:
+“Small progress every day.”
+
+==================================================
+
+--------------------------------------------------
+BOTTOM PANEL
+--------------------------------------------------
+
+SECTION 1 — SESSION STATS
+
+Features:
+- focus time
+- pomodoros completed
+- streak
+- tasks completed
+
+Design:
+- compact stat cards
+- clean icons
+- animated numbers
+
+==================================================
+
+SECTION 2 — DAILY GOAL
+
+Features:
+- circular percentage
+- daily completion progress
+
+==================================================
+UI STYLE GUIDE
+==================================================
+
+Theme:
+- matte black background
+- warm yellow accents
+- subtle purple/cyan glow accents
+- soft shadows
+- rounded corners
+- premium spacing
+
+Typography:
+- modern sans-serif
+- highly readable
+- medium-bold headings
+
+Animations:
+- smooth
+- subtle
+- GPU-friendly
+- avoid excessive motion
+
+==================================================
+PERFORMANCE RULES
+==================================================
+
+VERY IMPORTANT:
+Optimize for OBS streaming performance.
+
+Avoid:
+- unnecessary rerenders
+- heavy blur
+- particle effects
+- massive animations
+- video backgrounds
+
+Prefer:
+- CSS transforms
+- lightweight transitions
+- minimal DOM updates
+
+==================================================
+COMPONENT STRUCTURE
+==================================================
+
+Create reusable components:
+
+- Header
+- TimerCard
+- TaskPanel
+- MusicWidget
+- WebcamFrame
+- MotivationCard
+- StatsBar
+- GoalProgress
+
+==================================================
+FOLDER STRUCTURE
+==================================================
+
+src/
+ ├── components/
+ ├── pages/
+ ├── hooks/
+ ├── store/
+ ├── styles/
+ ├── utils/
+ └── assets/
+
+==================================================
+FINAL PRODUCT FEEL
+==================================================
+
+The final result should feel like:
+- a premium productivity workspace
+- a professional coding stream setup
+- a calm focused study environment
+
+The UI should attract viewers through:
+- cleanliness
+- consistency
+- readability
+- smoothness
+- aesthetic minimalism
+
+NOT through excessive complexity.
