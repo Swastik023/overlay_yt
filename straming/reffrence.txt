@@ -1,4 +1,4 @@
-Build a lightweight “Study With Me / Coding Stream Dashboard” web app for OBS Studio integration.
+Build a lightweight “LEARN WITH ME / Coding Stream Dashboard” web app for OBS Studio integration.
 
 IMPORTANT:
 Keep the project SIMPLE, CLEAN, LIGHTWEIGHT, and BEAUTIFUL.
@@ -108,7 +108,7 @@ Design:
 - clean typography
 
 Example:
-STUDY WITH ME
+LEARN WITH ME
 Focus • Learn • Build
 
 ==================================================

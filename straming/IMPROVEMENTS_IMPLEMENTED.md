@@ -12,7 +12,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  ◉ LIVE  │  STUDY WITH ME — Deep Focus Session                  │
+│  ◉ LIVE  │  LEARN WITH ME — Deep Focus Session                  │
 │                                                                  │
 │  ⏰ 07:49 AM  •  🎵 Resonance — Loafy  •  🍅 06  ☕ 02  🔥 12 Days│
 └──────────────────────────────────────────────────────────────────┘
@@ -162,7 +162,7 @@ TOTAL:             ~850px (with flex webcam)
 
 #### **Title**:
 ```tsx
-- Text: "STUDY WITH ME — Deep Focus Session"
+- Text: "LEARN WITH ME — Deep Focus Session"
 - Font: 16px bold
 - "ME" in golden yellow
 - Tracking: wider

@@ -406,7 +406,7 @@ height: '160px',
 ### Competitive Status:
 
 **Before**: Behind top streamers
-**After**: **Competitive with top Study With Me streamers!**
+**After**: **Competitive with top LEARN WITH ME streamers!**
 
 You now have:
 - Pascal Zoels-level aesthetic
@@ -460,4 +460,4 @@ Your overlay is now:
 
 ---
 
-**You're ready to compete with the best Study With Me streamers on YouTube! 🎓✨**
+**You're ready to compete with the best LEARN WITH ME streamers on YouTube! 🎓✨**

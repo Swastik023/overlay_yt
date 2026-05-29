@@ -5,7 +5,7 @@
 This overlay matches your reference design with:
 
 **Layout Structure:**
-- **Top Header** (70px) - "STUDY WITH ME" title with LIVE indicator
+- **Top Header** (70px) - "LEARN WITH ME" title with LIVE indicator
 - **Left Sidebar** (150px) - Pomodoro timer, tasks, music widget
 - **Right Sidebar** (150px) - Webcam frame, motivation, streak reminder
 - **Bottom Bar** (80px) - Stats, goals, progress bars
@@ -86,7 +86,7 @@ Size Y: 120
 ## 🎨 Layout Sections
 
 ### Top Header (70px height)
-- Centered title: "STUDY WITH ME"
+- Centered title: "LEARN WITH ME"
 - Subtitle: "FOCUS • LEARN • BUILD"
 - LIVE indicator (top-right corner)
 
@@ -271,7 +271,7 @@ Your overlay should look like:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    STUDY WITH ME                    [LIVE]  │
+│                    LEARN WITH ME                    [LIVE]  │
 │                  FOCUS • LEARN • BUILD                      │
 ├──────────┬─────────────────────────────────────┬───────────┤
 │          │                                     │           │

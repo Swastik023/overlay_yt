@@ -13,7 +13,7 @@
 │                   TOP STRIP → 1600 × 90                                 │
 │                                                                          │
 │  ◉ LIVE                                                                  │
-│  STUDY WITH ME — Deep Focus Session                                      │
+│  LEARN WITH ME — Deep Focus Session                                      │
 │                                                                          │
 │  ⏰ 01:14 PM  •  🎵 Not Playing  •  🍅 00  ☕ 00  🔥 12 Days             │
 │                                                                          │
@@ -132,7 +132,7 @@ Height: 990px
 
 ### **Line 1** (40px height):
 ```
-◉ LIVE  │  STUDY WITH ME — Deep Focus Session
+◉ LIVE  │  LEARN WITH ME — Deep Focus Session
 ```
 
 ### **Line 2** (40px height):

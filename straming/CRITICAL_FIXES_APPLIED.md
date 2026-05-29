@@ -131,13 +131,13 @@ Time Display: ✅ Present (07:59 PM format)
 ```
 BEFORE:
 ┌─────────────────────────────────────────────┐
-│         STUDY WITH ME                [LIVE] │
+│         LEARN WITH ME                [LIVE] │
 │       focus • learn • build                 │
 └─────────────────────────────────────────────┘
 
 AFTER:
 ┌─────────────────────────────────────────────┐
-│ 07:59 PM  STUDY WITH ME          [LIVE]    │
+│ 07:59 PM  LEARN WITH ME          [LIVE]    │
 │           FOCUS • LEARN • BUILD             │
 └─────────────────────────────────────────────┘
 ```

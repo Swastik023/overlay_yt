@@ -5,7 +5,7 @@
 Your overlay has been **completely redesigned** to match the reference image you provided!
 
 ### New Layout:
-- **Top Header** - "STUDY WITH ME" with LIVE indicator
+- **Top Header** - "LEARN WITH ME" with LIVE indicator
 - **Left Sidebar** (150px) - Pomodoro timer, tasks, music
 - **Right Sidebar** (150px) - Webcam frame, motivation, streak
 - **Bottom Bar** (80px) - Stats, goals, progress bars
@@ -66,7 +66,7 @@ FPS: 30
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│           STUDY WITH ME                      [LIVE]  │
+│           LEARN WITH ME                      [LIVE]  │
 │         FOCUS • LEARN • BUILD                        │
 ├────────┬─────────────────────────────────┬──────────┤
 │        │                                 │          │

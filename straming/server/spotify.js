@@ -52,7 +52,7 @@ export async function refreshAccessToken(refreshToken, clientId, clientSecret) {
 
 export async function getCurrentlyPlaying(accessToken) {
   try {
-    const response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
+    const response = await axios.get('https://api.spotify.com/v1/me/player?additional_types=track,episode', {
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
@@ -65,11 +65,12 @@ export async function getCurrentlyPlaying(accessToken) {
     const data = response.data;
     if (!data || !data.item) return null;
 
+    const isEpisode = data.currently_playing_type === 'episode';
     return {
       isPlaying: data.is_playing,
-      title: data.item.name,
-      artist: data.item.artists.map(a => a.name).join(', '),
-      albumArt: data.item.album.images[0]?.url || '',
+      title: data.item.name || 'Unknown Track',
+      artist: isEpisode ? (data.item.show?.name || 'Podcast') : (data.item.artists?.map(a => a.name).join(', ') || 'Unknown Artist'),
+      albumArt: isEpisode ? (data.item.images?.[0]?.url || data.item.show?.images?.[0]?.url || '') : (data.item.album?.images?.[0]?.url || ''),
       progressMs: data.progress_ms,
       durationMs: data.item.duration_ms
     };

@@ -54,7 +54,7 @@ Implemented the exact layout specification with precise dimensions and positioni
 │                   TOP STRIP → 1600 × 90                                 │
 │                                                                          │
 │  ◉ LIVE                                                                  │
-│  STUDY WITH ME — Deep Focus Session                                      │
+│  LEARN WITH ME — Deep Focus Session                                      │
 │                                                                          │
 │  ⏰ 01:14 PM  •  🎵 Not Playing  •  🍅 00  ☕ 00  🔥 12 Days             │
 │                                                                          │

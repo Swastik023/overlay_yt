@@ -7,6 +7,7 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { useSpotify } from './hooks/useSpotify'
 import { exchangeCodeForToken } from './utils/spotifyAuth'
 import { useStore } from './store/useStore'
+import { useFocusTimerBridge } from './hooks/useFocusTimerBridge'
 import { Loader2, CheckCircle, XCircle } from 'lucide-react'
 
 export default function App() {
@@ -15,6 +16,10 @@ export default function App() {
   const [callbackMessage, setCallbackMessage] = useState('')
   const setSpotifyAccessToken = useStore((s) => s.setSpotifyAccessToken)
   const setSpotifyRefreshToken = useStore((s) => s.setSpotifyRefreshToken)
+
+  // Get timer state for theming
+  const { timer } = useFocusTimerBridge()
+  const timerMode: 'focus' | 'break' = timer?.state === 'pomodoro' ? 'focus' : 'break'
 
   useEffect(() => {
     connect()
@@ -182,7 +187,7 @@ export default function App() {
       }}
     >
       {/* Top Header */}
-      <TopHeader />
+      <TopHeader timerMode={timerMode} />
 
       {/* Left Sidebar */}
       <LeftSidebarNew />
@@ -208,6 +213,8 @@ export default function App() {
       >
         SCREEN CAPTURE AREA
       </div>
+
+
 
       {/* Spotify Settings - Hidden in OBS mode */}
       {!document.body.classList.contains('obs-mode') && <SpotifySettings />}

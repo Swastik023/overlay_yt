@@ -35,8 +35,7 @@ export interface SessionState {
   currentState: string;           // Current time block state
   startTime: number;              // Session start timestamp (seconds)
   endTime: number;                // Session end timestamp (seconds)
-  pomodorosCompleted: number;     // Number of completed pomodoros
-  currentCycle: number;           // Current cycle number
+
   hasUniformBreaks: boolean;      // Whether breaks are uniform duration
   canReset: boolean;              // Whether reset is available
 }
@@ -212,24 +211,7 @@ export function validateSessionState(state: any): SessionState {
     throw new ValidationError(`Invalid currentState: ${state.currentState}. Must be a string`);
   }
   
-  // Requirement 12.2: pomodorosCompleted must be non-negative integer
-  if (typeof state.pomodorosCompleted !== 'number' || 
-      state.pomodorosCompleted < 0 || 
-      !Number.isInteger(state.pomodorosCompleted)) {
-    throw new ValidationError(
-      `Invalid pomodorosCompleted: ${state.pomodorosCompleted}. Must be a non-negative integer`
-    );
-  }
-  
-  // Requirement 12.3: currentCycle must be positive integer
-  if (typeof state.currentCycle !== 'number' || 
-      state.currentCycle < 1 || 
-      !Number.isInteger(state.currentCycle)) {
-    throw new ValidationError(
-      `Invalid currentCycle: ${state.currentCycle}. Must be a positive integer (>= 1)`
-    );
-  }
-  
+
   // Requirement 12.4: Timestamp validation and startTime <= endTime
   if (typeof state.startTime !== 'number' || !Number.isFinite(state.startTime)) {
     throw new ValidationError(`Invalid startTime: ${state.startTime}. Must be a valid unix timestamp`);

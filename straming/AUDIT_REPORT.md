@@ -1,5 +1,5 @@
 # 🔍 Deep Project Audit Report
-**Project:** Study With Me / Coding Stream Dashboard  
+**Project:** LEARN WITH ME / Coding Stream Dashboard  
 **Date:** May 10, 2026  
 **Auditor:** Kiro AI  
 

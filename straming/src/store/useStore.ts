@@ -17,6 +17,12 @@ export interface NowPlaying {
   duration: number
 }
 
+export interface CurrentActivity {
+  project: string
+  task: string
+  stage: string
+}
+
 interface StreamStore {
   // Tasks
   tasks: Task[]
@@ -26,6 +32,9 @@ interface StreamStore {
   nowPlaying: NowPlaying
   spotifyAccessToken: string | null
   spotifyRefreshToken: string | null
+
+  // Current Activity (for viewer context)
+  currentActivity: CurrentActivity
 
   // Actions — Tasks
   addTask: (text: string) => void
@@ -38,6 +47,9 @@ interface StreamStore {
   setNowPlaying: (track: NowPlaying) => void
   setSpotifyAccessToken: (token: string | null) => void
   setSpotifyRefreshToken: (token: string | null) => void
+
+  // Actions — Current Activity
+  setCurrentActivity: (activity: Partial<CurrentActivity>) => void
 }
 
 export const useStore = create<StreamStore>()(
@@ -63,6 +75,12 @@ export const useStore = create<StreamStore>()(
       },
       spotifyAccessToken: null,
       spotifyRefreshToken: null,
+
+      currentActivity: {
+        project: 'OBS Stream Overlay',
+        task: 'Building UI components',
+        stage: 'In Progress',
+      },
 
       // ── Task Actions ──────────────────────────────────────
       addTask: (text) =>
@@ -91,6 +109,12 @@ export const useStore = create<StreamStore>()(
       setSpotifyAccessToken: (token) => set({ spotifyAccessToken: token }),
       
       setSpotifyRefreshToken: (token) => set({ spotifyRefreshToken: token }),
+
+      // ── Current Activity Actions ───────────────────────────
+      setCurrentActivity: (activity) =>
+        set((s) => ({
+          currentActivity: { ...s.currentActivity, ...activity },
+        })),
     }),
     {
       name: 'stream-dashboard',
@@ -99,6 +123,7 @@ export const useStore = create<StreamStore>()(
         dailyGoal: state.dailyGoal,
         spotifyAccessToken: state.spotifyAccessToken,
         spotifyRefreshToken: state.spotifyRefreshToken,
+        currentActivity: state.currentActivity,
       }),
     }
   )

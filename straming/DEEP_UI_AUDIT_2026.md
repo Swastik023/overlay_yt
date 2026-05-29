@@ -158,7 +158,7 @@ height: '70px'
 ```
 
 **Content:**
-- ✅ Centered title "STUDY WITH ME"
+- ✅ Centered title "LEARN WITH ME"
 - ✅ Subtitle "FOCUS • LEARN • BUILD"
 - ✅ LIVE indicator (top-right)
 

@@ -18,7 +18,7 @@ Rebuild the overlay to match the reference image exactly:
 ```
 ┌────────────────────────────────────────────────────────────────┐
 │                     TOP HEADER (70px)                          │
-│              STUDY WITH ME - FOCUS • LEARN • BUILD             │
+│              LEARN WITH ME - FOCUS • LEARN • BUILD             │
 │                                                        [LIVE]   │
 ├─────────────┬──────────────────────────────────┬──────────────┤
 │   LEFT      │                                  │    RIGHT     │

@@ -224,7 +224,7 @@ This implementation plan transforms the OBS overlay from a standalone browser ti
     - Test shutdown timeout
     - _Requirements: 20.2, 20.3, 20.4_
 
-- [~] 10. Add health check endpoint
+- [ ] 10. Add health check endpoint
   - [ ] 10.1 Create HTTP server for health checks (`straming/bridge/src/http-server.ts`)
     - Add HTTP server on localhost:8081
     - Implement GET /health endpoint
@@ -375,7 +375,7 @@ This implementation plan transforms the OBS overlay from a standalone browser ti
     - Document how to enable debug logging
     - _Requirements: 13.5, 16.1_
 
-- [~] 20. End-to-end integration testing
+- [ ] 20. End-to-end integration testing
   - [ ]* 20.1 Test complete integration flow
     - Start Focus Timer
     - Start bridge service

@@ -171,8 +171,6 @@ describe('validateSessionState', () => {
     currentState: 'pomodoro',
     startTime: 1700000000,
     endTime: 1700001500,
-    pomodorosCompleted: 2,
-    currentCycle: 1,
     hasUniformBreaks: true,
     canReset: true,
   };
@@ -204,46 +202,7 @@ describe('validateSessionState', () => {
     });
   });
 
-  describe('pomodorosCompleted validation (Requirement 12.2)', () => {
-    it('should accept non-negative integers', () => {
-      expect(() => validateSessionState({ ...validSessionState, pomodorosCompleted: 0 })).not.toThrow();
-      expect(() => validateSessionState({ ...validSessionState, pomodorosCompleted: 1 })).not.toThrow();
-      expect(() => validateSessionState({ ...validSessionState, pomodorosCompleted: 100 })).not.toThrow();
-    });
 
-    it('should reject negative values', () => {
-      expect(() => validateSessionState({ ...validSessionState, pomodorosCompleted: -1 }))
-        .toThrow(ValidationError);
-    });
-
-    it('should reject non-integers', () => {
-      expect(() => validateSessionState({ ...validSessionState, pomodorosCompleted: 1.5 }))
-        .toThrow(ValidationError);
-    });
-  });
-
-  describe('currentCycle validation (Requirement 12.3)', () => {
-    it('should accept positive integers', () => {
-      expect(() => validateSessionState({ ...validSessionState, currentCycle: 1 })).not.toThrow();
-      expect(() => validateSessionState({ ...validSessionState, currentCycle: 2 })).not.toThrow();
-      expect(() => validateSessionState({ ...validSessionState, currentCycle: 100 })).not.toThrow();
-    });
-
-    it('should reject zero', () => {
-      expect(() => validateSessionState({ ...validSessionState, currentCycle: 0 }))
-        .toThrow(ValidationError);
-    });
-
-    it('should reject negative values', () => {
-      expect(() => validateSessionState({ ...validSessionState, currentCycle: -1 }))
-        .toThrow(ValidationError);
-    });
-
-    it('should reject non-integers', () => {
-      expect(() => validateSessionState({ ...validSessionState, currentCycle: 1.5 }))
-        .toThrow(ValidationError);
-    });
-  });
 
   describe('timestamp validation (Requirement 12.4)', () => {
     it('should accept valid timestamps with startTime <= endTime', () => {

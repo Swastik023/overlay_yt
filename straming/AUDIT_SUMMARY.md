@@ -105,7 +105,7 @@ Code Quality        ██████████████████   88/
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    TOP HEADER (70px)                        │
-│              STUDY WITH ME • FOCUS • LEARN • BUILD          │
+│              LEARN WITH ME • FOCUS • LEARN • BUILD          │
 │  [TIME]                                            [LIVE]   │
 ├──────────┬──────────────────────────────────────┬──────────┤
 │  LEFT    │                                      │  RIGHT   │

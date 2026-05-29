@@ -26,7 +26,20 @@ export interface OfflineMessage {
   };
 }
 
-export type BridgeMessage = TimerStateMessage | OfflineMessage;
+export interface SpotifyUpdateMessage {
+  type: 'spotifyUpdate';
+  data: {
+    name: string;
+    artist: string;
+    album: string;
+    albumArt: string;
+    isPlaying: boolean;
+    progress: number;
+    duration: number;
+  };
+}
+
+export type BridgeMessage = TimerStateMessage | OfflineMessage | SpotifyUpdateMessage;
 
 /**
  * WebSocket server for overlay connections
@@ -35,6 +48,7 @@ export class BridgeWebSocketServer {
   private wss: WebSocketServer;
   private clients: Set<WebSocket> = new Set();
   private port: number;
+  private cachedSpotifyData: SpotifyUpdateMessage['data'] | null = null;
 
   constructor(port: number = 8080) {
     this.port = port;
@@ -60,6 +74,28 @@ export class BridgeWebSocketServer {
     console.log('[WebSocketServer] New overlay connected');
     
     this.clients.add(ws);
+
+    // Send cached Spotify data immediately to new connections (critical for OBS)
+    if (this.cachedSpotifyData) {
+      this.sendToClient(ws, {
+        type: 'spotifyUpdate',
+        data: this.cachedSpotifyData,
+      });
+    }
+
+    // Handle incoming messages from clients (e.g. Spotify data relay)
+    ws.on('message', (raw: Buffer) => {
+      try {
+        const message = JSON.parse(raw.toString());
+        if (message.type === 'spotifyUpdate' && message.data) {
+          // Cache and relay Spotify data to all OTHER clients
+          this.cachedSpotifyData = message.data;
+          this.relayToOthers(ws, message);
+        }
+      } catch (error) {
+        // Ignore malformed messages
+      }
+    });
 
     ws.on('close', () => {
       console.log('[WebSocketServer] Overlay disconnected');
@@ -143,6 +179,30 @@ export class BridgeWebSocketServer {
     }
     if (failCount > 0) {
       console.warn(`[WebSocketServer] Failed to send to ${failCount} client(s)`);
+    }
+  }
+
+  /**
+   * Relay a message to all clients EXCEPT the sender.
+   * Used for Spotify data: browser sends → bridge relays → OBS receives.
+   */
+  private relayToOthers(sender: WebSocket, message: BridgeMessage): void {
+    const payload = JSON.stringify(message);
+    let relayCount = 0;
+
+    this.clients.forEach((client) => {
+      if (client !== sender && client.readyState === WebSocket.OPEN) {
+        try {
+          client.send(payload);
+          relayCount++;
+        } catch (error) {
+          console.error('[WebSocketServer] Failed to relay to client:', error);
+        }
+      }
+    });
+
+    if (relayCount > 0) {
+      console.log(`[WebSocketServer] Relayed Spotify data to ${relayCount} overlay(s)`);
     }
   }
 

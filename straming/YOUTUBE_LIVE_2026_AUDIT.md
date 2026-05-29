@@ -16,7 +16,7 @@
 - ✅ Calm, aesthetic productivity
 - ✅ Long-form focus sessions (2-8 hours)
 - ✅ Minimal distractions
-- ✅ "Study With Me" vibe
+- ✅ "LEARN WITH ME" vibe
 - ✅ Clean, premium look
 - ✅ Mobile-friendly (50% watch on phone)
 
@@ -39,7 +39,7 @@
 - Good foundation for YouTube
 
 ### 2. **Pomodoro Timer** ✅
-- Essential for Study With Me
+- Essential for LEARN WITH ME
 - Visible and functional
 - Creates structure and accountability
 - Viewers love this
@@ -67,7 +67,7 @@
 
 ### 1. **Overlay Coverage Too High** 🚨
 **Problem**: ~25-30% of screen is UI
-**YouTube Standard**: 10-15% max for Study With Me
+**YouTube Standard**: 10-15% max for LEARN WITH ME
 
 **Current**:
 - Left sidebar: 260px (~13.5% of 1920px)
@@ -170,7 +170,7 @@
 ✅ Username below (not inside frame)
 ```
 
-**Reference**: Pascal Zoels, Merve, other top Study With Me streamers
+**Reference**: Pascal Zoels, Merve, other top LEARN WITH ME streamers
 
 **Impact**: MEDIUM - More inviting and YouTube-standard
 
@@ -266,7 +266,7 @@
 
 ## 🎨 YOUTUBE AESTHETIC TRENDS (2026)
 
-### Top Study With Me Styles:
+### Top LEARN WITH ME Styles:
 
 **1. Dark Academia** (Most Popular)
 - Deep browns, warm ambers
@@ -668,4 +668,4 @@ Your overlay is **technically excellent** but needs **YouTube-specific aesthetic
 5. Simplified header
 6. Session timer
 
-This would make your overlay **YouTube-ready** and competitive with top Study With Me streamers! 🚀
+This would make your overlay **YouTube-ready** and competitive with top LEARN WITH ME streamers! 🚀

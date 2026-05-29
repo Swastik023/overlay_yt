@@ -10,11 +10,11 @@
 const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || ''
 const SPOTIFY_CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET || ''
 
-// Use loopback IP address as required by Spotify (not localhost)
-// Port is dynamically determined from current window location
+// Use loopback IP address (127.0.0.1) as required by Spotify's new strict security policies.
+// 'localhost' is explicitly not allowed.
+// IMPORTANT: Add http://127.0.0.1:5173/ as a Redirect URI in your Spotify Developer Dashboard.
 const getRedirectUri = () => {
   const port = window.location.port || '5173'
-  // Always use root path since we handle callback in App component
   return `http://127.0.0.1:${port}/`
 }
 

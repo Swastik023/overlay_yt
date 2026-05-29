@@ -12,7 +12,7 @@
 
 ### **1. Header - Centered & Minimal** ✅
 **Before**: 3-column layout with session timer, subscriber count  
-**After**: Centered "STUDY WITH ME" with LIVE + Time + Date
+**After**: Centered "LEARN WITH ME" with LIVE + Time + Date
 
 **Changes**:
 - Centered title with golden "ME" accent
@@ -32,7 +32,7 @@
 **New Structure**:
 ```
 ┌─────────────────────┐
-│ 🎓 STUDY WITH ME    │ ← Sidebar Header
+│ 🎓 LEARN WITH ME    │ ← Sidebar Header
 │ FOCUS • LEARN • GROW│
 ├─────────────────────┤
 │ FOCUS TIMER         │ ← Timer Section
@@ -383,7 +383,7 @@ FPS: 30
 ## ✅ FEATURES CHECKLIST
 
 ### **Header**:
-- [x] Centered "STUDY WITH ME" title
+- [x] Centered "LEARN WITH ME" title
 - [x] Golden "ME" accent
 - [x] LIVE indicator with pulsing dot
 - [x] Current time display

@@ -463,7 +463,7 @@
 1. **Hardcoded Streak** - Replace with real calculation
 2. **Decorative Social Icons** - Make functional or remove
 3. **Static Webcam Placeholder** - Add real webcam or remove
-4. **"Study With Me" Generic Title** - Personalize it
+4. **"LEARN WITH ME" Generic Title** - Personalize it
 5. **Excessive Empty Space** - Fill with useful content
 
 ---

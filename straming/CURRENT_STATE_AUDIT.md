@@ -9,7 +9,7 @@ Based on the provided screenshot at `localhost:5173`, here's the current state a
 ## ✅ WHAT'S WORKING
 
 ### **Header** ✅
-- [x] Centered "STUDY WITH ME" title visible
+- [x] Centered "LEARN WITH ME" title visible
 - [x] LIVE indicator present
 - [x] Time display (12:02 PM) visible
 - [x] Date display (11/05/25) visible

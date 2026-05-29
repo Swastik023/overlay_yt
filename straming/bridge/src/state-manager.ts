@@ -48,9 +48,7 @@ export class StateManager {
       this.lastUpdateTime = Date.now();
       
       console.log('[StateManager] Session state updated:', {
-        currentState: this.sessionState.currentState,
-        pomodorosCompleted: this.sessionState.pomodorosCompleted,
-        currentCycle: this.sessionState.currentCycle
+        currentState: this.sessionState.currentState
       });
     } catch (error) {
       console.error('[StateManager] Invalid session state:', error);
