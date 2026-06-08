@@ -1,270 +1,169 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useStore } from '../store/useStore'
-import { WifiOff, Edit2, Trash2 } from 'lucide-react'
-import { useFocusTimerBridge } from '../hooks/useFocusTimerBridge'
+import { useRef } from 'react'
+import { WifiOff } from 'lucide-react'
+import { useSuperProductivity, resolveProjectName, formatMs, formatMsHuman, deriveActivityState } from '../hooks/useSuperProductivity'
 
-function TaskItem({ task, toggleTask, updateTask, removeTask, accentColor }: any) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(task.text);
-  const inputRef = useRef<HTMLInputElement>(null);
+// ─── Theme ────────────────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isEditing]);
+export const THEME_COLORS = {
+  focus:    { accent: '#FFC107', accentRgb: '255, 193, 7' },
+  overtime: { accent: '#f97316', accentRgb: '249, 115, 22' },
+  break:    { accent: '#22c55e', accentRgb: '34, 197, 94' },
+  paused:   { accent: '#94a3b8', accentRgb: '148, 163, 184' },
+  idle:     { accent: '#6b7280', accentRgb: '107, 114, 128' },
+} as const
 
-  const handleSave = () => {
-    if (editText.trim()) {
-      updateTask(task.id, editText.trim());
-    } else {
-      removeTask(task.id);
-    }
-    setIsEditing(false);
-  };
+// ─── Tiny helper components ───────────────────────────────────────────────────
 
+function Label({ children, accent }: { children: React.ReactNode; accent: string }) {
   return (
     <div
       style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '8px',
-        position: 'relative'
+        fontSize: '10px',
+        fontWeight: 700,
+        letterSpacing: '0.15em',
+        color: accent,
+        textTransform: 'uppercase' as const,
+        marginBottom: '10px',
+        transition: 'color 0.6s ease',
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      <div
-        onClick={() => toggleTask(task.id)}
-        style={{
-          width: '14px',
-          height: '14px',
-          minWidth: '14px',
-          borderRadius: '3px',
-          border: task.completed
-            ? `1.5px solid ${accentColor}`
-            : '1.5px solid rgba(255, 255, 255, 0.2)',
-          background: task.completed ? accentColor : 'transparent',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: '1px',
-          cursor: 'pointer'
-        }}
-      >
-        {task.completed && (
-          <span style={{ fontSize: '10px', color: '#0a0a0f' }}>✓</span>
-        )}
-      </div>
-
-      {isEditing ? (
-        <input
-          ref={inputRef}
-          value={editText}
-          onChange={(e) => setEditText(e.target.value)}
-          onBlur={handleSave}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSave();
-            if (e.key === 'Escape') {
-              setEditText(task.text);
-              setIsEditing(false);
-            }
-          }}
-          style={{
-            background: 'rgba(0,0,0,0.5)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            color: 'white',
-            fontSize: '12px',
-            flex: 1,
-            outline: 'none',
-            borderRadius: '3px',
-            padding: '2px 4px',
-            marginTop: '-2px'
-          }}
-        />
-      ) : (
-        <span
-          onClick={() => toggleTask(task.id)}
-          style={{
-            fontSize: '12px',
-            color: task.completed
-              ? 'rgba(255, 255, 255, 0.3)'
-              : 'rgba(255, 255, 255, 0.7)',
-            textDecoration: task.completed ? 'line-through' : 'none',
-            lineHeight: '1.4',
-            flex: 1,
-            wordBreak: 'break-word',
-            cursor: 'pointer'
-          }}
-        >
-          {task.text}
-        </span>
-      )}
-
-      {isHovered && !isEditing && (
-        <div style={{ display: 'flex', gap: '4px', position: 'absolute', right: 0, background: 'rgba(15, 15, 20, 0.8)', paddingLeft: '4px' }}>
-          <button
-            onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
-            style={{ background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.5)', cursor: 'pointer', padding: 0, display: 'flex' }}
-          >
-            <Edit2 size={12} />
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); removeTask(task.id); }}
-            style={{ background: 'none', border: 'none', color: 'rgba(255, 100, 100, 0.7)', cursor: 'pointer', padding: 0, display: 'flex' }}
-          >
-            <Trash2 size={12} />
-          </button>
-        </div>
-      )}
+      {children}
     </div>
-  );
+  )
 }
 
-function ActivityField({
+function StatRow({
   label,
   value,
-  onSave,
-  accentColor,
-  accentRgb,
-  hideLabel,
+  accent,
+  mono,
 }: {
-  label: string;
-  value: string;
-  onSave: (val: string) => void;
-  accentColor: string;
-  accentRgb: string;
-  hideLabel?: boolean;
+  label: string
+  value: string
+  accent: string
+  mono?: boolean
 }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(value);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => { setDraft(value); }, [value]);
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [isEditing]);
-
-  const save = () => {
-    const trimmed = draft.trim();
-    if (trimmed) onSave(trimmed);
-    else setDraft(value);
-    setIsEditing(false);
-  };
-
-  if (isEditing) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        {!hideLabel && (
-          <span
-            style={{
-              fontSize: '9px',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              color: 'rgba(255, 255, 255, 0.35)',
-              minWidth: '38px',
-            }}
-          >
-            {label}
-          </span>
-        )}
-        <input
-          ref={inputRef}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={save}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') save();
-            if (e.key === 'Escape') { setDraft(value); setIsEditing(false); }
-          }}
-          style={{
-            background: 'rgba(0, 0, 0, 0.5)',
-            border: `1px solid rgba(${accentRgb}, 0.4)`,
-            borderRadius: '3px',
-            color: '#ffffff',
-            fontSize: '11px',
-            fontWeight: 600,
-            padding: '2px 6px',
-            outline: 'none',
-            flex: 1,
-            width: '100%',
-          }}
-        />
-      </div>
-    );
-  }
-
   return (
-    <div
-      style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
-      onClick={() => setIsEditing(true)}
-    >
-      {!hideLabel && (
-        <span
-          style={{
-            fontSize: '9px',
-            fontWeight: 700,
-            letterSpacing: '0.1em',
-            color: 'rgba(255, 255, 255, 0.35)',
-            minWidth: '38px',
-          }}
-        >
-          {label}
-        </span>
-      )}
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.05em' }}>
+        {label}
+      </span>
       <span
         style={{
-          fontSize: '11px',
-          fontWeight: 600,
-          color: 'rgba(255, 255, 255, 0.75)',
-          lineHeight: 1.3,
-          wordBreak: 'break-word',
+          fontSize: '13px',
+          fontWeight: 700,
+          color: accent,
+          fontFamily: mono ? "'JetBrains Mono', monospace" : 'inherit',
+          transition: 'color 0.6s ease',
         }}
       >
         {value}
       </span>
     </div>
-  );
+  )
 }
 
-// Theme colors shared across components
-export const THEME_COLORS = {
-  focus: { accent: '#FFC107', accentRgb: '255, 193, 7' },
-  break: { accent: '#22c55e', accentRgb: '34, 197, 94' },
-} as const;
+function ProgressBar({ progress, accentRgb }: { progress: number; accentRgb: string }) {
+  return (
+    <div
+      style={{
+        height: '4px',
+        background: 'rgba(255,255,255,0.08)',
+        borderRadius: '2px',
+        overflow: 'hidden',
+        marginTop: '6px',
+      }}
+    >
+      <div
+        style={{
+          height: '100%',
+          width: `${Math.min(100, Math.max(0, progress))}%`,
+          background: `rgba(${accentRgb}, 0.8)`,
+          borderRadius: '2px',
+          transition: 'width 1s linear',
+        }}
+      />
+    </div>
+  )
+}
+
+// ─── Compact break tips for sidebar ───────────────────────────────────────────
+
+const BREAK_TIPS_COMPACT = [
+  { emoji: '👀', text: 'Blink rapidly for a few seconds to refresh your eyes.' },
+  { emoji: '🧘', text: 'Close your eyes and take 3 deep breaths.' },
+  { emoji: '🚶', text: 'Stand up and stretch your legs.' },
+  { emoji: '💧', text: 'Drink some water — stay hydrated.' },
+  { emoji: '🤲', text: 'Rotate your wrists 4x clockwise, 4x counter-clockwise.' },
+  { emoji: '🌿', text: 'Look at something green or far away for 20 seconds.' },
+  { emoji: '🦴', text: 'Roll your shoulders back and sit up straight.' },
+  { emoji: '☕', text: 'Grab a quick coffee or fruit.' },
+]
+
+// ─── Main component ───────────────────────────────────────────────────────────
 
 export function LeftSidebarNew() {
-  // Connect to Focus Timer bridge
-  const { timer, session, connectionStatus } = useFocusTimerBridge()
+  const { connectionStatus, currentTask, focusMode, tick, todayStats, projects, todayTasks } =
+    useSuperProductivity()
 
-  // Tasks and Spotify from local store
-  const tasks = useStore((s) => s.tasks)
-  const toggleTask = useStore((s) => s.toggleTask)
-  const addTask = useStore((s) => s.addTask)
-  const updateTask = useStore((s) => s.updateTask)
-  const removeTask = useStore((s) => s.removeTask)
-  const currentActivity = useStore((s) => s.currentActivity)
-  const setCurrentActivity = useStore((s) => s.setCurrentActivity)
+  // Derive theme from activity state (matches the header)
+  const activityState = deriveActivityState(focusMode, currentTask)
+  const isBreak = focusMode?.isBreakActive ?? false
+  const theme = THEME_COLORS[activityState]
 
-  // Timer state from bridge (or defaults if offline)
-  const timeLeft = Math.floor(timer?.remaining ?? 1500) // Round to integer seconds
-  const timerMode = timer?.state === 'pomodoro' ? 'focus' : 'break'
+  const isOffline = connectionStatus !== 'connected'
+  const isReconnecting = connectionStatus === 'reconnecting'
 
-  // Dynamic theme
-  const theme = THEME_COLORS[timerMode];
+  // Project name resolution
+  const projectName = resolveProjectName(currentTask?.projectId, projects)
 
-  const totalDuration = timer?.duration ?? 1500
-  const completedTasks = tasks.filter(t => t.completed).length
-  
-  // Detect long break (15 minutes)
-  const isLongBreak = timerMode === 'break' && totalDuration === 900
+  // Compact break tip — pick once per break (re-randomizes when break toggles)
+  const lastBreakRef = useRef(false)
+  const breakTipRef = useRef(BREAK_TIPS_COMPACT[Math.floor(Math.random() * BREAK_TIPS_COMPACT.length)])
+  if (isBreak && !lastBreakRef.current) {
+    breakTipRef.current = BREAK_TIPS_COMPACT[Math.floor(Math.random() * BREAK_TIPS_COMPACT.length)]
+  }
+  lastBreakRef.current = isBreak
 
-  // Show offline state
-  const isOffline = connectionStatus !== 'connected' || !timer
+  // Session header label
+  let sessionLabel = '🌙 IDLE'
+  if (isBreak) {
+    sessionLabel = focusMode?.isLongBreak ? '☕ LONG BREAK' : '☕ BREAK'
+  } else if (focusMode?.isSessionPaused) {
+    sessionLabel = '⏸ PAUSED'
+  } else if (focusMode?.isInOvertime) {
+    sessionLabel = '🔥 OVERTIME'
+  } else if (focusMode?.isSessionRunning) {
+    sessionLabel = '🔥 FOCUS'
+  } else if (currentTask) {
+    sessionLabel = '🔥 TRACKING'
+  }
+
+  // Focus timer display
+  const focusModeLabel = focusMode?.mode ?? null
+
+  // Time values from tick (most up-to-date) or focusMode
+  const taskTimeToday = tick?.timeSpentToday ?? currentTask?.timeSpentToday ?? 0
+  const taskEstimate = tick?.timeEstimate ?? currentTask?.timeEstimate ?? 0
+  const taskTitle = tick?.title ?? currentTask?.title ?? null
+  const taskProgress =
+    taskEstimate > 0 ? Math.min(100, (taskTimeToday / taskEstimate) * 100) : 0
+
+  // Today's task list (open first, then done). Highlight the actively-tracked one.
+  const activeId = tick?.currentTaskId ?? currentTask?.id ?? null
+  const openTasks = todayTasks.filter((t) => !t.isDone)
+  const doneTasks = todayTasks.filter((t) => t.isDone)
+  const orderedTasks = [...openTasks, ...doneTasks]
+
+
+  // Today stats
+  const timeSpentToday = todayStats?.timeSpentToday ?? 0
+  const completedToday = todayStats?.completedToday ?? 0
+  const plannedTotal = todayStats?.planned.total ?? 0
+  const plannedDone = todayStats?.planned.done ?? 0
+  const plannedRemaining = todayStats?.planned.remaining ?? 0
+  const planProgress = todayStats?.planned.progress ?? 0
+  const estimateRemaining = todayStats?.estimateRemaining ?? 0
 
   return (
     <div
@@ -276,62 +175,16 @@ export function LeftSidebarNew() {
         bottom: 0,
         background: 'rgba(15, 15, 20, 0.6)',
         borderRight: '1px solid rgba(255, 255, 255, 0.05)',
-        padding: '20px 15px',
+        padding: '16px 14px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '20px',
+        gap: '16px',
         overflowY: 'auto',
         overflowX: 'hidden',
       }}
     >
-      {/* Session Header */}
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-          <div
-            style={{
-              fontSize: '10px',
-              fontWeight: 700,
-              letterSpacing: '0.15em',
-              color: theme.accent,
-              textTransform: 'uppercase',
-              transition: 'color 0.6s ease',
-            }}
-          >
-            {timerMode === 'focus' ? '🔥 FOCUS' : '☕ BREAK'}
-          </div>
-          {/* Connection status indicator */}
-          {isOffline && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontSize: '9px',
-                color: 'rgba(255, 255, 255, 0.3)',
-              }}
-            >
-              <WifiOff size={10} />
-              <span>{connectionStatus === 'reconnecting' ? 'Reconnecting...' : 'Offline'}</span>
-            </div>
-          )}
-        </div>
-
-        {isLongBreak && !isOffline && (
-          <div
-            style={{
-              fontSize: '11px',
-              fontWeight: 600,
-              color: '#22d3ee',
-              marginTop: '4px',
-            }}
-          >
-            🎉 Long Break (15 min)
-          </div>
-        )}
-      </div>
-
-      {/* Now Working On — Viewer Context */}
-      <div>
+      {/* ── Session Header ────────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div
           style={{
             fontSize: '10px',
@@ -340,169 +193,280 @@ export function LeftSidebarNew() {
             color: theme.accent,
             textTransform: 'uppercase',
             transition: 'color 0.6s ease',
-            marginBottom: '10px',
           }}
         >
-          🔨 NOW WORKING ON
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-          }}
-        >
-          {/* Project */}
-          <ActivityField
-            label="PROJECT"
-            value={currentActivity.project}
-            onSave={(val) => setCurrentActivity({ project: val })}
-            accentColor={theme.accent}
-            accentRgb={theme.accentRgb}
-          />
-          {/* Current Task */}
-          <ActivityField
-            label="DOING"
-            value={currentActivity.task}
-            onSave={(val) => setCurrentActivity({ task: val })}
-            accentColor={theme.accent}
-            accentRgb={theme.accentRgb}
-          />
-          {/* Stage */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-            }}
-          >
+          {sessionLabel}
+          {focusModeLabel && (
             <span
               style={{
+                marginLeft: '6px',
+                padding: '1px 6px',
+                background: `rgba(${theme.accentRgb}, 0.12)`,
+                border: `1px solid rgba(${theme.accentRgb}, 0.25)`,
+                borderRadius: '4px',
                 fontSize: '9px',
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                color: 'rgba(255, 255, 255, 0.35)',
-                minWidth: '38px',
+                letterSpacing: '0.08em',
               }}
             >
-              STAGE
+              {focusModeLabel.toUpperCase()}
             </span>
+          )}
+        </div>
+
+        {isOffline && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9px', color: 'rgba(255,255,255,0.3)' }}>
+            <WifiOff size={10} />
+            <span>{isReconnecting ? 'Reconnecting…' : 'SP Offline'}</span>
+          </div>
+        )}
+      </div>
+
+      {/* ── Current Task ──────────────────────────────────────── */}
+      <div>
+        <Label accent={theme.accent}>📋 CURRENT TASK</Label>
+        {taskTitle ? (
+          <div>
+            {/* Task title */}
             <div
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: '2px 8px',
-                background: `rgba(${theme.accentRgb}, 0.1)`,
-                border: `1px solid rgba(${theme.accentRgb}, 0.25)`,
-                borderRadius: '8px',
-                transition: 'all 0.6s ease',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: 'rgba(255,255,255,0.9)',
+                lineHeight: 1.4,
+                wordBreak: 'break-word',
+                marginBottom: '6px',
               }}
             >
-              <ActivityField
-                label=""
-                value={currentActivity.stage}
-                onSave={(val) => setCurrentActivity({ stage: val })}
-                accentColor={theme.accent}
-                accentRgb={theme.accentRgb}
-                hideLabel
-              />
+              {taskTitle}
             </div>
+
+            {/* Project name */}
+            {projectName && (
+              <div
+                style={{
+                  fontSize: '10px',
+                  color: `rgba(${theme.accentRgb}, 0.8)`,
+                  marginBottom: '8px',
+                  fontWeight: 500,
+                }}
+              >
+                📁 {projectName}
+              </div>
+            )}
+
+            {/* Time today vs estimate */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                marginBottom: '4px',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '15px',
+                  fontWeight: 700,
+                  color: '#ffffff',
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >
+                {formatMs(taskTimeToday)}
+              </span>
+              {taskEstimate > 0 && (
+                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)' }}>
+                  / {formatMs(taskEstimate)}
+                </span>
+              )}
+            </div>
+
+            {/* Task progress bar */}
+            {taskEstimate > 0 && (
+              <ProgressBar progress={taskProgress} accentRgb={theme.accentRgb} />
+            )}
           </div>
-        </div>
+        ) : (
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontStyle: 'italic' }}>
+            No active task
+          </div>
+        )}
       </div>
 
-      {/* Tasks Section */}
+      {/* ── Today's Tasks ─────────────────────────────────────── */}
+      {orderedTasks.length > 0 && (
+        <div>
+          <Label accent={theme.accent}>
+            ✅ TODAY'S TASKS{' '}
+            <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 600 }}>
+              {doneTasks.length}/{orderedTasks.length}
+            </span>
+          </Label>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {orderedTasks.map((t) => {
+              const isActiveTask = t.id === activeId
+              return (
+                <div
+                  key={t.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '8px',
+                    padding: isActiveTask ? '4px 6px' : '0',
+                    borderRadius: '6px',
+                    background: isActiveTask ? `rgba(${theme.accentRgb}, 0.1)` : 'transparent',
+                    border: isActiveTask
+                      ? `1px solid rgba(${theme.accentRgb}, 0.3)`
+                      : '1px solid transparent',
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  {/* Checkbox */}
+                  <div
+                    style={{
+                      width: '13px',
+                      height: '13px',
+                      minWidth: '13px',
+                      marginTop: '2px',
+                      borderRadius: '3px',
+                      border: t.isDone
+                        ? `1.5px solid ${theme.accent}`
+                        : '1.5px solid rgba(255,255,255,0.25)',
+                      background: t.isDone ? theme.accent : 'transparent',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {t.isDone && <span style={{ fontSize: '9px', color: '#0a0a0f' }}>✓</span>}
+                  </div>
+
+                  {/* Title */}
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: isActiveTask ? 600 : 500,
+                      color: t.isDone
+                        ? 'rgba(255,255,255,0.3)'
+                        : isActiveTask
+                        ? '#ffffff'
+                        : 'rgba(255,255,255,0.75)',
+                      textDecoration: t.isDone ? 'line-through' : 'none',
+                      lineHeight: 1.4,
+                      flex: 1,
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    {isActiveTask && !t.isDone ? '▶ ' : ''}
+                    {t.title}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Break Tip (compact, shown during break) ────────────── */}
+      {isBreak && (
+        <div
+          style={{
+            padding: '10px',
+            background: 'rgba(34, 197, 94, 0.06)',
+            borderRadius: '8px',
+            border: '1px solid rgba(34, 197, 94, 0.15)',
+          }}
+        >
+          <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.15em', color: '#22c55e', textTransform: 'uppercase' as const, marginBottom: '6px' }}>
+            💡 BREAK TIP
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <span style={{ fontSize: '16px', lineHeight: 1 }}>{breakTipRef.current.emoji}</span>
+            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', lineHeight: 1.4 }}>
+              {breakTipRef.current.text}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* ── Today's Stats ─────────────────────────────────────── */}
       <div>
+        <Label accent={theme.accent}>📊 TODAY</Label>
+
         <div
           style={{
+            padding: '10px',
+            background: 'rgba(255,255,255,0.02)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255,255,255,0.05)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '10px',
+            flexDirection: 'column',
+            gap: '7px',
           }}
         >
-          <div
-            style={{
-              fontSize: '10px',
-              fontWeight: 700,
-              letterSpacing: '0.15em',
-              color: theme.accent,
-              textTransform: 'uppercase',
-              transition: 'color 0.6s ease',
-            }}
-          >
-            TODAY'S PLAN
-          </div>
-          <button
-            onClick={() => addTask('New Task')}
-            style={{
-              width: '16px',
-              height: '16px',
-              background: `rgba(${theme.accentRgb}, 0.1)`,
-              border: `1px solid rgba(${theme.accentRgb}, 0.3)`,
-              borderRadius: '3px',
-              color: theme.accent,
-              transition: 'all 0.6s ease',
-              fontSize: '12px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 0,
-            }}
-          >
-            +
-          </button>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {tasks.map((task) => (
-            <TaskItem 
-              key={task.id} 
-              task={task} 
-              toggleTask={toggleTask}
-              updateTask={updateTask}
-              removeTask={removeTask}
-              accentColor={theme.accent}
+          <StatRow
+            label="Focused"
+            value={timeSpentToday > 0 ? formatMsHuman(timeSpentToday) : '—'}
+            accent={theme.accent}
+          />
+          <StatRow
+            label="Completed"
+            value={completedToday > 0 ? String(completedToday) : '—'}
+            accent={theme.accent}
+          />
+          {plannedTotal > 0 && (
+            <>
+              <StatRow
+                label="Planned"
+                value={`${plannedDone} / ${plannedTotal}`}
+                accent={theme.accent}
+              />
+              <ProgressBar progress={planProgress} accentRgb={theme.accentRgb} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2px' }}>
+                <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)' }}>
+                  {plannedRemaining} remaining
+                </span>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: theme.accent,
+                    fontFamily: "'JetBrains Mono', monospace",
+                  }}
+                >
+                  {planProgress}%
+                </span>
+              </div>
+            </>
+          )}
+          {estimateRemaining > 0 && (
+            <StatRow
+              label="Est. left"
+              value={formatMsHuman(estimateRemaining)}
+              accent="rgba(255,255,255,0.45)"
             />
-          ))}
-        </div>
-
-        {/* Progress */}
-        <div
-          style={{
-            marginTop: '12px',
-            padding: '8px',
-            background: 'rgba(255, 255, 255, 0.02)',
-            borderRadius: '6px',
-            border: '1px solid rgba(255, 255, 255, 0.05)',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '10px',
-              color: 'rgba(255, 255, 255, 0.4)',
-              marginBottom: '4px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-            }}
-          >
-            Progress
-          </div>
-          <div
-            style={{
-              fontSize: '16px',
-              fontWeight: 700,
-              color: theme.accent,
-              fontFamily: "'JetBrains Mono', monospace",
-              transition: 'color 0.6s ease',
-            }}
-          >
-            {completedTasks}/{tasks.length}
-          </div>
+          )}
         </div>
       </div>
+
+      {/* ── Connection status ─────────────────────────────────── */}
+      {isOffline && (
+        <div
+          style={{
+            padding: '8px 10px',
+            background: 'rgba(255,59,48,0.08)',
+            border: '1px solid rgba(255,59,48,0.2)',
+            borderRadius: '8px',
+            fontSize: '10px',
+            color: 'rgba(255,100,80,0.8)',
+            lineHeight: 1.5,
+          }}
+        >
+          <strong>OFFLINE</strong>
+          <br />
+          Super Productivity not connected
+        </div>
+      )}
     </div>
   )
 }

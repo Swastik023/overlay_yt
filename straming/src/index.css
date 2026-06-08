@@ -77,6 +77,23 @@ body.obs-mode #overlay-root {
   background: transparent !important;
 }
 
+/* OBS Mode: sidebar only, everything else transparent */
+.obs-mode {
+  background: transparent !important;
+}
+
+.obs-mode #overlay-root {
+  background: transparent !important;
+}
+
+/* Hide header, break banner, center area, and settings in OBS mode */
+.obs-mode .top-header,
+.obs-mode .break-banner,
+.obs-mode .center-area,
+.obs-mode .spotify-settings {
+  display: none !important;
+}
+
 /* ================================================
    ANIMATIONS
    ================================================ */
@@ -117,6 +134,17 @@ body.obs-mode #overlay-root {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
   }
 }
 

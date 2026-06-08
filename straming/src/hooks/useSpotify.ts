@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useStore } from '../store/useStore'
 import { refreshAccessToken } from '../utils/spotifyAuth'
-import { sendSpotifyToBridge, useFocusTimerBridge } from './useFocusTimerBridge'
 
 interface SpotifyTrack {
   name: string
@@ -42,40 +41,23 @@ export function useSpotify() {
   const refreshTokenRef = useRef(spotifyRefreshToken)
   const isRefreshingRef = useRef(false)
 
-  // Keep refs in sync
-  useEffect(() => {
-    accessTokenRef.current = spotifyAccessToken
-  }, [spotifyAccessToken])
-
-  useEffect(() => {
-    refreshTokenRef.current = spotifyRefreshToken
-  }, [spotifyRefreshToken])
-
-  // Subscribe to bridge state to receive Spotify data (for OBS mode)
-  const { spotify: bridgeSpotify } = useFocusTimerBridge()
-
-  // Update store when bridge sends new Spotify data
-  // This is how the OBS browser source gets the data
-  useEffect(() => {
-    if (!spotifyAccessToken && bridgeSpotify) {
-      setNowPlaying(bridgeSpotify)
-    }
-  }, [bridgeSpotify, spotifyAccessToken, setNowPlaying])
+  // Keep refs in sync with the latest store values on every render.
+  // This ensures async callbacks inside the effect always read the freshest
+  // token without the effect needing to restart on every refresh cycle.
+  accessTokenRef.current = spotifyAccessToken
+  refreshTokenRef.current = spotifyRefreshToken
 
   useEffect(() => {
     if (!spotifyAccessToken) {
-      // No token, set to not playing (unless bridge has data)
-      if (!bridgeSpotify) {
-        setNowPlaying({
-          name: 'Not Connected',
-          artist: 'Connect Spotify',
-          album: '',
-          albumArt: '',
-          isPlaying: false,
-          progress: 0,
-          duration: 0,
-        })
-      }
+      setNowPlaying({
+        name: 'Not Connected',
+        artist: 'Connect Spotify',
+        album: '',
+        albumArt: '',
+        isPlaying: false,
+        progress: 0,
+        duration: 0,
+      })
       return
     }
 
@@ -166,7 +148,6 @@ export function useSpotify() {
             duration: 0,
           }
           setNowPlaying(emptyTrack)
-          sendSpotifyToBridge(emptyTrack)
           return
         }
 
@@ -183,7 +164,6 @@ export function useSpotify() {
             duration: 0,
           }
           setNowPlaying(expiredTrack)
-          sendSpotifyToBridge(expiredTrack)
           return
         }
 
@@ -208,7 +188,6 @@ export function useSpotify() {
           }
 
           setNowPlaying(track)
-          sendSpotifyToBridge(track)
         }
       } catch (error) {
         console.error('[Spotify] Error fetching now playing:', error)
@@ -223,7 +202,6 @@ export function useSpotify() {
             duration: 0,
           }
           setNowPlaying(errorTrack)
-          sendSpotifyToBridge(errorTrack)
         }
       }
     }

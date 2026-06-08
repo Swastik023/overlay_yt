@@ -55,13 +55,11 @@ interface StreamStore {
 export const useStore = create<StreamStore>()(
   persist(
     (set) => ({
-      tasks: [
-        { id: '1', text: 'LeetCode Practice', completed: true },
-        { id: '2', text: 'System Design', completed: false },
-        { id: '3', text: 'DevOps Revision', completed: false },
-        { id: '4', text: 'AI Research', completed: false },
-        { id: '5', text: 'Project Work', completed: false },
-      ],
+      // Start with an empty task list so the overlay shows real SP tasks
+      // (fetched via useSuperProductivity) rather than stale placeholder data.
+      // The persisted store will rehydrate any tasks the user previously added
+      // through the overlay UI itself.
+      tasks: [],
       dailyGoal: 5,
 
       nowPlaying: {

@@ -22,7 +22,7 @@ export interface TimerStateMessage {
 export interface OfflineMessage {
   type: 'offline';
   data: {
-    reason: 'focus-timer-not-running' | 'dbus-connection-lost';
+    reason: 'focus-timer-not-running' | 'dbus-connection-lost' | 'super-productivity-not-running' | 'super-productivity-connected';
   };
 }
 

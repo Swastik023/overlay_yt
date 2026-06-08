@@ -1,0 +1,163 @@
+/* Break Banner Styles - Full Screen Overlay */
+
+.break-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: breakFadeIn 0.5s ease-out;
+}
+
+.break-banner-content {
+  text-align: center;
+  color: white;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.break-emoji {
+  font-size: 6rem;
+  margin-bottom: 1rem;
+  animation: breakPulse 2s ease-in-out infinite;
+}
+
+.break-title {
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.1em;
+}
+
+.break-type {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.break-timer {
+  font-size: 6rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.break-progress-bar {
+  width: 100%;
+  max-width: 600px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 auto 3rem;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.break-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);
+  transition: width 1s linear;
+  border-radius: 6px;
+}
+
+.break-tip-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 0 auto 2rem;
+  max-width: 600px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  text-align: left;
+  animation: breakSlideUp 0.6s ease-out 0.3s both;
+}
+
+.break-tip-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.break-tip-content {
+  flex: 1;
+}
+
+.break-tip-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.break-tip-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.break-cycle-info {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  animation: breakSlideUp 0.6s ease-out 0.4s both;
+}
+
+/* Animations */
+
+@keyframes breakFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes breakPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes breakSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .break-title {
+    font-size: 2.5rem;
+  }
+  
+  .break-timer {
+    font-size: 4rem;
+  }
+  
+  .break-tip-card {
+    padding: 1.5rem;
+  }
+  
+  .break-tip-title {
+    font-size: 1.25rem;
+  }
+}

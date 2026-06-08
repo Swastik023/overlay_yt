@@ -1,7 +1,7 @@
 {
-  "name": "focus-timer-bridge",
+  "name": "sp-overlay-bridge",
   "version": "1.0.0",
-  "description": "Bridge service connecting Focus Timer D-Bus to OBS overlay WebSocket",
+  "description": "Bridge service connecting Super Productivity REST API/SSE to OBS overlay WebSocket",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -9,19 +9,22 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "debug": "node dist/index.js --debug",
-    "test": "vitest"
+    "test": "vitest",
+    "sp:start": "node dist/sp-bridge.js",
+    "sp:dev": "tsx watch src/sp-bridge.ts",
+    "sp:build": "tsc --project tsconfig.sp.json"
   },
   "keywords": [
-    "focus-timer",
+    "super-productivity",
     "obs",
     "pomodoro",
-    "dbus",
-    "websocket"
+    "websocket",
+    "sse"
   ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "dbus-next": "^0.10.2",
+    "eventsource": "^2.0.2",
     "ws": "^8.18.0"
   },
   "devDependencies": {
